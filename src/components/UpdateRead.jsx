@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./styled_inputs.css";
 import app from "../firebaseConfig";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, remove } from "firebase/database";
 import { Link } from "react-router-dom";
 const UpdateRead = () => {
   const [fruitArray, setFruitArray] = useState([]);
@@ -35,6 +35,12 @@ const UpdateRead = () => {
     } finally {
       setLoading(false);
     }
+  };
+  const deleteFruite = async (fruitId) => {
+    const db = getDatabase(app);
+    const newDocRef = ref(db, "nature/fruits/" + fruitId);
+    await remove(newDocRef);
+    window.location.reload();
   };
   return (
     <div className="enhanced-app">
@@ -71,7 +77,19 @@ const UpdateRead = () => {
                   >
                     Update
                   </Link>
-                  {/* <p className="glass-fruit-definition">{item.fruitId}</p> */}
+                  {/* i add the button to delete the fruit according to it's id  */}
+                  <button
+                    style={{
+                      padding: "13px 25px",
+                      fontSize: "13px",
+                      border: "none",
+                      background: "red",
+                      borderRadius: "10px",
+                    }}
+                    onClick={() => deleteFruite(item.fruitId)}
+                  >
+                    delete
+                  </button>
                 </div>
               </div>
             ))}
